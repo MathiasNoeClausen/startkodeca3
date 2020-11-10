@@ -1,59 +1,97 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import org.mindrot.jbcrypt.BCrypt;
 
-/**
- *
- * @author maddy
- */
 @Entity
+@NamedQueries({
+@NamedQuery(name = "Users.deleteAllRows", query = "DELETE from Users"),
+@NamedQuery(name = "Users.getAll", query = "SELECT u FROM Users u")})
+@Table(name = "users")
 public class User implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+  private static final long serialVersionUID = 1L;
+  @Id
+  @Basic(optional = false)
+  @NotNull
+  @Column(name = "user_name", length = 25)
+  private String userName;
+  @Basic(optional = false)
+  @NotNull
+  @Size(min = 1, max = 255)
+  @Column(name = "user_pass")
+  private String userPass;
+  @JoinTable(name = "user_roles", joinColumns = {
+    @JoinColumn(name = "user_name", referencedColumnName = "user_name")}, inverseJoinColumns = {
+    @JoinColumn(name = "role_name", referencedColumnName = "role_name")})
+  @ManyToMany
+  private List<Role> roleList = new ArrayList<>();
 
-    public Long getId() {
-        return id;
+  public List<String> getRolesAsStrings() {
+    if (roleList.isEmpty()) {
+      return null;
+    }
+    List<String> rolesAsStrings = new ArrayList<>();
+    roleList.forEach((role) -> {
+        rolesAsStrings.add(role.getRoleName());
+      });
+    return rolesAsStrings;
+  }
+
+  public User() {}
+
+  //TODO Change when password is hashed
+   public boolean verifyPassword(String pw){
+        return BCrypt.checkpw(pw, userPass);
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public User(String userName, String userPass) {
+    this.userName = userName;
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
+    this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt());
+  }
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof User)) {
-            return false;
-        }
-        User other = (User) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
 
-    @Override
-    public String toString() {
-        return "entities.User[ id=" + id + " ]";
-    }
-    
+  public String getUserName() {
+    return userName;
+  }
+
+  public void setUserName(String userName) {
+    this.userName = userName;
+  }
+
+  public String getUserPass() {
+    return this.userPass;
+  }
+
+  public void setUserPass(String userPass) {
+    this.userPass = userPass;
+  }
+
+  public List<Role> getRoleList() {
+    return roleList;
+  }
+
+  public void setRoleList(List<Role> roleList) {
+    this.roleList = roleList;
+  }
+
+  public void addRole(Role userRole) {
+    roleList.add(userRole);
+  }
+
 }
