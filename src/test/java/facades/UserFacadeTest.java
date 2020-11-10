@@ -9,6 +9,7 @@ import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 //Uncomment the line below, to temporarily disable this test
@@ -39,7 +40,7 @@ public class UserFacadeTest {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-            em.createNamedQuery("users.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Users.deleteAllRows").executeUpdate();
             em.persist(new User("Some txt", "More text"));
             em.persist(new User("aaa", "bbb"));
 

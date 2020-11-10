@@ -19,8 +19,8 @@ import org.mindrot.jbcrypt.BCrypt;
 
 @Entity
 @NamedQueries({
-@NamedQuery(name = "Users.deleteAllRows", query = "DELETE from Users"),
-@NamedQuery(name = "Users.getAll", query = "SELECT u FROM Users u")})
+@NamedQuery(name = "Users.deleteAllRows", query = "DELETE from User"),
+@NamedQuery(name = "Users.getAll", query = "SELECT u FROM User u")})
 @Table(name = "users")
 public class User implements Serializable {
 

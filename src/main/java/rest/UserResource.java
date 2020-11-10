@@ -41,6 +41,15 @@ public class UserResource {
         return "{\"msg\":\"Hello World\"}";
     }
     
+    @Path("count")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getRenameMeCount() {
+        long count = FACADE.getUserCount();
+        //System.out.println("--------------->"+count);
+        return "{\"count\":"+count+"}";  //Done manually so no need for a DTO
+    }
+    
     
     
 }

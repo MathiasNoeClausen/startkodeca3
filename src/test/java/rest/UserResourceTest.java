@@ -68,7 +68,7 @@ public class UserResourceTest {
         u2 = new User("aaa", "bbb");
         try {
             em.getTransaction().begin();
-            em.createNamedQuery("users.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Users.deleteAllRows").executeUpdate();
             em.persist(u1);
             em.persist(u2);
             em.getTransaction().commit();
@@ -79,7 +79,7 @@ public class UserResourceTest {
 
     @Test
     public void testServerIsUp() {
-        given().when().get("/users").then().statusCode(200);
+        given().when().get("/user").then().statusCode(200);
     }
 
     //This test assumes the database contains two rows
@@ -87,7 +87,7 @@ public class UserResourceTest {
     public void testDummyMsg() throws Exception {
         given()
                 .contentType("application/json")
-                .get("/users/").then()
+                .get("/user/").then()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
                 .body("msg", equalTo("Hello World"));
@@ -97,7 +97,7 @@ public class UserResourceTest {
     public void testCount() throws Exception {
         given()
                 .contentType("application/json")
-                .get("/users/count").then()
+                .get("/user/count").then()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
                 .body("count", equalTo(2));
