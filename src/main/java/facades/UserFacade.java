@@ -1,5 +1,6 @@
 package facades;
 
+import dtos.UsersDTO;
 import entities.User;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -46,6 +47,17 @@ public class UserFacade {
             em.close();
         }
         return user;
+    }
+     
+     
+     
+         public UsersDTO getAllUsers() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            return new UsersDTO(em.createNamedQuery("Users.getAll").getResultList());
+        } finally {
+            em.close();
+        }
     }
     
 }
